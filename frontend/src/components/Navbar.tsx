@@ -1,10 +1,10 @@
 import React from 'react';
-import { Rocket, Wallet } from 'lucide-react';
+import { Rocket, Wallet, LogOut } from 'lucide-react';
 import { useFreighter } from '../hooks/useFreighter';
 import { motion } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
-  const { address, connect } = useFreighter();
+  const { address, balance, connect, disconnect } = useFreighter();
 
   return (
     <motion.header 
@@ -26,9 +26,17 @@ export const Navbar: React.FC = () => {
       </div>
       <div>
         {address ? (
-          <div className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Wallet size={18} />
-            {address.substring(0, 6)}...{address.substring(52)}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'default' }}>
+              <Wallet size={18} />
+              {balance ? `${balance} XLM` : 'Loading...'} 
+              <span style={{ opacity: 0.5, marginLeft: '0.5rem', borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '0.5rem' }}>
+                {address.substring(0, 4)}...{address.substring(52)}
+              </span>
+            </div>
+            <button onClick={disconnect} style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.5rem' }} title="Disconnect">
+              <LogOut size={18} />
+            </button>
           </div>
         ) : (
           <motion.button 

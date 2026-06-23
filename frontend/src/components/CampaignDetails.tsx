@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Activity, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, Activity, ArrowLeft, Loader2 } from 'lucide-react';
 import { useNova, type Campaign } from '../context/NovaContext';
+import { investInCampaign } from '../services/soroban';
+import toast from 'react-hot-toast';
 
 interface DetailsProps {
   campaign: Campaign;
@@ -11,13 +13,45 @@ interface DetailsProps {
 export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) => {
   const { invest, vote } = useNova();
   const [investAmount, setInvestAmount] = useState('');
+  const [isInvesting, setIsInvesting] = useState(false);
 
-  const handleInvest = (e: React.FormEvent) => {
+  const handleInvest = async (e: React.FormEvent) => {
     e.preventDefault();
     const amount = parseFloat(investAmount);
-    if (!isNaN(amount) && amount > 0) {
+    if (isNaN(amount) || amount <= 0) return;
+
+    setIsInvesting(true);
+    
+    // We create a custom toast to show the signing state, then update it upon success.
+    const loadingToastId = toast.loading('Waiting for wallet signature...');
+    
+    try {
+      const result = await investInCampaign(campaign.id, campaign.startup, amount.toString());
+      
+      // Update global context so UI changes
       invest(campaign.id, amount);
       setInvestAmount('');
+      
+      toast.success(
+        <div>
+          Successfully invested {amount} XLM!
+          <br/>
+          <a 
+            href={`https://stellar.expert/explorer/testnet/tx/${result.hash}`} 
+            target="_blank" 
+            rel="noreferrer"
+            style={{ color: '#00f0ff', fontSize: '0.85rem', textDecoration: 'underline', marginTop: '4px', display: 'block' }}
+          >
+            View on Stellar Expert Explorer
+          </a>
+        </div>,
+        { id: loadingToastId, duration: 8000 }
+      );
+    } catch (err: any) {
+      console.error(err);
+      toast.error(`Transaction failed: ${err.message || 'Unknown error'}`, { id: loadingToastId });
+    } finally {
+      setIsInvesting(false);
     }
   };
 
@@ -62,16 +96,25 @@ export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) =>
               onChange={(e) => setInvestAmount(e.target.value)}
               placeholder="Amount in XLM" 
               style={{ flex: '1 1 200px' }}
+              disabled={isInvesting}
               required
             />
             <motion.button 
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={isInvesting ? {} : { scale: 1.02 }}
+              whileTap={isInvesting ? {} : { scale: 0.98 }}
               type="submit" 
               className="btn-primary" 
-              style={{ flex: '0 0 auto' }}
+              disabled={isInvesting}
+              style={{ flex: '0 0 auto', opacity: isInvesting ? 0.7 : 1 }}
             >
-              Invest & Mint Gov Tokens
+              {isInvesting ? (
+                <>
+                  <Loader2 className="spinner" size={18} />
+                  Signing...
+                </>
+              ) : (
+                "Invest & Mint Gov Tokens"
+              )}
             </motion.button>
           </form>
         </div>

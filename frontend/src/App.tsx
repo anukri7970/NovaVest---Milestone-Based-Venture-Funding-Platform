@@ -9,6 +9,7 @@ import { CreatorDashboard } from './components/CreatorDashboard';
 import { Governance } from './components/Governance';
 import { Wallet } from 'lucide-react';
 import { useFreighter } from './hooks/useFreighter';
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 type Tab = 'explore' | 'portfolio' | 'create' | 'governance';
@@ -28,6 +29,15 @@ function AppContent() {
 
   return (
     <div className="app-container">
+      <Toaster position="bottom-right" toastOptions={{
+        style: {
+          background: 'rgba(25, 25, 45, 0.9)',
+          color: '#fff',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(0, 240, 255, 0.3)',
+          borderRadius: '12px',
+        }
+      }} />
       <Navbar />
 
       {error && (

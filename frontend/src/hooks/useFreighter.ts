@@ -1,46 +1,49 @@
-import { useState, useEffect } from 'react';
-import { 
-  isConnected, 
-  requestAccess, 
-  getNetworkDetails
-} from '@stellar/freighter-api';
+import { useState, useCallback } from 'react';
+import { requestAccess, setAllowed } from '@stellar/freighter-api';
+import { Horizon } from '@stellar/stellar-sdk';
 
-export function useFreighter() {
+const server = new Horizon.Server('https://horizon-testnet.stellar.org');
+
+export const useFreighter = () => {
   const [address, setAddress] = useState<string | null>(null);
-  const [network, setNetwork] = useState<any | null>(null);
+  const [balance, setBalance] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        if (await isConnected()) {
-          const access: any = await requestAccess();
-          setAddress(typeof access === 'string' ? access : access.address);
-          const net = await getNetworkDetails();
-          setNetwork(net);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    checkConnection();
-  }, []);
-
-  const connect = async () => {
+  const fetchBalance = async (pubKey: string) => {
     try {
-      if (await isConnected()) {
-        const access: any = await requestAccess();
-        setAddress(typeof access === 'string' ? access : access.address);
-        const net = await getNetworkDetails();
-        setNetwork(net);
-        setError(null);
-      } else {
-        setError('Freighter is not installed or locked.');
+      const account = await server.loadAccount(pubKey);
+      const nativeBalance = account.balances.find(b => b.asset_type === 'native');
+      if (nativeBalance) {
+        setBalance(parseFloat(nativeBalance.balance).toFixed(2));
       }
-    } catch (e: any) {
-      setError(e.message || 'Failed to connect Freighter');
+    } catch (e) {
+      console.warn("Could not fetch balance. Account might not be funded on testnet.", e);
+      setBalance("0.00");
     }
   };
 
-  return { address, network, connect, error };
-}
+  const connect = useCallback(async () => {
+    try {
+      setError(null);
+      await setAllowed();
+      const response = await requestAccess();
+      
+      if (response && response.address) {
+        setAddress(response.address);
+        await fetchBalance(response.address);
+      } else if (response && response.error) {
+        setError(response.error as string);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Failed to connect to Freighter. Please ensure the extension is installed and unlocked.');
+    }
+  }, []);
+
+  const disconnect = useCallback(() => {
+    setAddress(null);
+    setBalance(null);
+  }, []);
+
+  return { address, balance, connect, disconnect, error };
+};

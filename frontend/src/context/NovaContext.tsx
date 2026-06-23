@@ -33,7 +33,7 @@ interface NovaContextType {
 const INITIAL_CAMPAIGNS: Campaign[] = [
   {
     id: 1,
-    startup: 'GDEBQ...7X2A',
+    startup: 'GCXWUSOPSLQTMDDYLKZV7RN5J4KSB4VAMGIJGZN2ZVRLYDC7X3SW2KWW',
     name: 'Orbit Protocol',
     goal: 50000,
     raised: 25000,
@@ -46,7 +46,7 @@ const INITIAL_CAMPAIGNS: Campaign[] = [
   },
   {
     id: 2,
-    startup: 'GXXXX...YYYY',
+    startup: 'GAP4ZFI3LZNTCDHMNVTG6J5UBAPKAQ3USFAI6ZZ72Q745TONRUCTZTBU',
     name: 'Stellar DEX Aggregator',
     goal: 100000,
     raised: 95000,

@@ -1,29 +1,54 @@
-import { rpc } from '@stellar/stellar-sdk';
-import { requestAccess } from '@stellar/freighter-api';
+import { Horizon, TransactionBuilder, Networks, Asset, Operation } from '@stellar/stellar-sdk';
+import { requestAccess, signTransaction } from '@stellar/freighter-api';
 
-const SERVER_URL = 'https://soroban-testnet.stellar.org';
-
-// Example Contract IDs (to be populated after deployment)
-// const CAMPAIGN_MANAGER_ID = 'C...'; 
-
-export const sorobanServer = new rpc.Server(SERVER_URL);
+const server = new Horizon.Server('https://horizon-testnet.stellar.org');
+const NETWORK_PASSPHRASE = Networks.TESTNET;
 
 /**
- * Initiates an investment transaction
+ * Initiates an investment transaction on the Stellar Testnet
+ * Builds a real XLM payment transaction to the startup's wallet,
+ * signs it using Freighter, and submits it to Horizon.
  */
-export async function investInCampaign(campaignId: number, amount: string) {
+export async function investInCampaign(_campaignId: number, startupAddress: string, amount: string) {
   try {
-    const pubKey = await requestAccess();
-    void campaignId;
-    void amount;
-    void pubKey;
+    // 1. Get user's public key from Freighter
+    const response = await requestAccess();
+    if (!response || !response.address) throw new Error("Wallet not connected");
+    const pubKey = response.address;
 
-    // Normally we would sign and submit here. 
-    // const signedTx = await signTransaction(txBuilder.toXDR(), { networkPassphrase: NETWORK_PASSPHRASE });
-    // const response = await sorobanServer.sendTransaction(signedTx);
-    // return response;
+    // 2. Load the user's account to get their sequence number
+    const account = await server.loadAccount(pubKey);
 
-    return { status: 'mock_success' };
+    // 3. Build the payment transaction
+    const tx = new TransactionBuilder(account, {
+      fee: '100', // 100 stroops minimum fee
+      networkPassphrase: NETWORK_PASSPHRASE,
+    })
+      .addOperation(
+        Operation.payment({
+          destination: startupAddress,
+          asset: Asset.native(),
+          amount: amount, // e.g. "100.50"
+        })
+      )
+      .setTimeout(30)
+      .build();
+
+    // 4. Sign the transaction using Freighter
+    const signedResponse = await signTransaction(tx.toXDR(), {
+      networkPassphrase: NETWORK_PASSPHRASE
+    });
+
+    if (signedResponse.error) {
+      throw new Error(signedResponse.error as string);
+    }
+
+    // 5. Submit the transaction to the network
+    // We rebuild the transaction from the signed XDR so we can submit it
+    const txToSubmit = TransactionBuilder.fromXDR(signedResponse.signedTxXdr as string, NETWORK_PASSPHRASE);
+    const result = await server.submitTransaction(txToSubmit as any);
+    
+    return { status: 'success', hash: result.hash };
   } catch (error) {
     console.error('Investment error:', error);
     throw error;
@@ -32,13 +57,17 @@ export async function investInCampaign(campaignId: number, amount: string) {
 
 /**
  * Votes on a milestone
+ * Currently mocked since voting doesn't transfer funds in this demo.
  */
 export async function voteMilestone(campaignId: number, voteYes: boolean) {
   try {
-    const pubKey = await requestAccess();
+    const response = await requestAccess();
     void campaignId;
     void voteYes;
-    void pubKey;
+    void response;
+
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     return { status: 'mock_success' };
   } catch (error) {
