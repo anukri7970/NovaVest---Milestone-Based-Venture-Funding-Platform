@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react';
 import { 
   isConnected, 
-  getPublicKey, 
-  signTransaction, 
-  NetworkDetails,
+  requestAccess, 
   getNetworkDetails
 } from '@stellar/freighter-api';
 
 export function useFreighter() {
   const [address, setAddress] = useState<string | null>(null);
-  const [network, setNetwork] = useState<NetworkDetails | null>(null);
+  const [network, setNetwork] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkConnection = async () => {
       try {
         if (await isConnected()) {
-          const pubKey = await getPublicKey();
-          setAddress(pubKey);
+          const access: any = await requestAccess();
+          setAddress(typeof access === 'string' ? access : access.address);
           const net = await getNetworkDetails();
           setNetwork(net);
         }
@@ -31,8 +29,8 @@ export function useFreighter() {
   const connect = async () => {
     try {
       if (await isConnected()) {
-        const pubKey = await getPublicKey();
-        setAddress(pubKey);
+        const access: any = await requestAccess();
+        setAddress(typeof access === 'string' ? access : access.address);
         const net = await getNetworkDetails();
         setNetwork(net);
         setError(null);
