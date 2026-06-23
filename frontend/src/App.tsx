@@ -17,7 +17,7 @@ type Tab = 'explore' | 'portfolio' | 'create' | 'governance';
 function AppContent() {
   const { address, connect, error } = useFreighter();
   const [activeTab, setActiveTab] = useState<Tab>('explore');
-  const { campaigns } = useNova();
+  const { campaigns, investments } = useNova();
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
   const activeCampaign = selectedCampaignId 
@@ -91,7 +91,21 @@ function AppContent() {
                     {address ? (
                       <>
                         <h3 style={{ marginBottom: '1rem', color: 'var(--accent-cyan)' }}>Your Investments</h3>
-                        <p style={{ color: 'var(--text-muted)' }}>You haven't invested in any campaigns yet.</p>
+                        {investments.length === 0 ? (
+                          <p style={{ color: 'var(--text-muted)' }}>You haven't invested in any campaigns yet.</p>
+                        ) : (
+                          <div style={{ textAlign: 'left' }}>
+                            {investments.map((inv, idx) => {
+                              const campaignName = campaigns.find(c => c.id === inv.campaignId)?.name || 'Unknown Campaign';
+                              return (
+                                <div key={idx} style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '12px', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                  <span style={{ fontWeight: 'bold' }}>{campaignName}</span>
+                                  <span style={{ color: '#00f0ff' }}>{inv.amount.toLocaleString()} XLM</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </>
                     ) : (
                       <>
