@@ -1,10 +1,15 @@
 import React from 'react';
 import { Rocket, Wallet, LogOut } from 'lucide-react';
-import { useFreighter } from '../hooks/useFreighter';
 import { motion } from 'framer-motion';
 
-export const Navbar: React.FC = () => {
-  const { address, balance, connect, disconnect } = useFreighter();
+interface NavbarProps {
+  address: string | null;
+  balance: string | null;
+  connect: () => void;
+  disconnect: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ address, balance, connect, disconnect }) => {
 
   return (
     <motion.header 

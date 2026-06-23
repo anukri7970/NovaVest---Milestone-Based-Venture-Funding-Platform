@@ -15,7 +15,7 @@ import './index.css';
 type Tab = 'explore' | 'portfolio' | 'create' | 'governance';
 
 function AppContent() {
-  const { address, connect, error } = useFreighter();
+  const { address, balance, connect, disconnect, error } = useFreighter();
   const [activeTab, setActiveTab] = useState<Tab>('explore');
   const { campaigns, investments } = useNova();
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
@@ -43,7 +43,7 @@ function AppContent() {
           borderRadius: '12px',
         }
       }} />
-      <Navbar />
+      <Navbar address={address} balance={balance} connect={connect} disconnect={disconnect} />
 
       {error && (
         <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
