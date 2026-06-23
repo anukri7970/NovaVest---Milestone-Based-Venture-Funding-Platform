@@ -67,10 +67,22 @@ export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) =>
       </button>
       
       <div className="glass-panel" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', background: 'linear-gradient(to right, #fff, #00f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          {campaign.name}
-        </h1>
-        <div className="campaign-startup" style={{ fontSize: '1.1rem' }}>Startup ID: {campaign.startup}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', background: 'linear-gradient(to right, #fff, #00f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            {campaign.name}
+          </h1>
+          <span style={{ fontSize: '0.9rem', background: 'rgba(124, 58, 237, 0.2)', color: 'var(--accent-purple)', padding: '0.4rem 1rem', borderRadius: '16px', border: '1px solid rgba(124, 58, 237, 0.4)' }}>
+            {campaign.category}
+          </span>
+        </div>
+        
+        <div className="campaign-startup" style={{ fontSize: '1rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>
+          Startup ID: {campaign.startup}
+        </div>
+
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-main)', marginTop: '1.5rem', lineHeight: '1.6' }}>
+          {campaign.description}
+        </p>
         
         <div className="progress-container" style={{ marginTop: '2.5rem' }}>
           <div className="progress-stats" style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>

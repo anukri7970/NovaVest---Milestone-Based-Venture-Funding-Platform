@@ -10,6 +10,9 @@ interface ExploreProps {
 export const ExploreCampaigns: React.FC<ExploreProps> = ({ onSelect }) => {
   const { campaigns } = useNova();
 
+  // Helper to truncate Stellar address
+  const truncateAddress = (addr: string) => `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
+
   return (
     <div className="grid">
       {campaigns.map((campaign, index) => (
@@ -17,19 +20,30 @@ export const ExploreCampaigns: React.FC<ExploreProps> = ({ onSelect }) => {
           key={campaign.id} 
           className="glass-card" 
           onClick={() => onSelect(campaign)} 
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.4 }}
           whileHover={{ y: -5, scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <div className="campaign-header">
-            <div className="campaign-title">{campaign.name}</div>
-            <div className="campaign-startup">{campaign.startup}</div>
+          <div className="campaign-header" style={{ marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+              <div className="campaign-title" style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{campaign.name}</div>
+              <span style={{ fontSize: '0.75rem', background: 'rgba(124, 58, 237, 0.2)', color: 'var(--accent-purple)', padding: '0.2rem 0.6rem', borderRadius: '12px', border: '1px solid rgba(124, 58, 237, 0.4)' }}>
+                {campaign.category}
+              </span>
+            </div>
+            <div className="campaign-startup" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+              {truncateAddress(campaign.startup)}
+            </div>
           </div>
           
-          <div className="progress-container">
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '2rem', flexGrow: 1 }}>
+            {campaign.description}
+          </p>
+          
+          <div className="progress-container" style={{ marginTop: 'auto' }}>
             <div className="progress-bar">
               <motion.div 
                 className="progress-fill" 

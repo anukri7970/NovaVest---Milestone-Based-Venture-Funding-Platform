@@ -6,17 +6,21 @@ import { useNova } from '../context/NovaContext';
 export const CreatorDashboard: React.FC = () => {
   const { addCampaign } = useNova();
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [goal, setGoal] = useState('');
   const [startup, setStartup] = useState('');
   
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !goal || !startup) return;
+    if (!name || !description || !category || !goal || !startup) return;
     
     addCampaign({
       id: Math.floor(Math.random() * 10000),
       startup,
       name,
+      description,
+      category,
       goal: parseFloat(goal),
       raised: 0,
       currentMilestoneIndex: 0,
@@ -29,6 +33,8 @@ export const CreatorDashboard: React.FC = () => {
     
     alert(`Campaign "${name}" successfully proposed to the DAO!`);
     setName('');
+    setDescription('');
+    setCategory('');
     setGoal('');
     setStartup('');
   };
@@ -52,6 +58,22 @@ export const CreatorDashboard: React.FC = () => {
         <div className="input-group">
           <label>Campaign Name</label>
           <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Stellar Defi Protocol" required />
+        </div>
+        
+        <div className="input-group">
+          <label>Short Description</label>
+          <textarea 
+            value={description} 
+            onChange={e => setDescription(e.target.value)} 
+            placeholder="Describe your project, vision, and how you will use the funds..." 
+            rows={3} 
+            required 
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Category Tag</label>
+          <input type="text" value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. DeFi, Gaming, Wallet..." required />
         </div>
         
         <div className="input-group">
