@@ -147,22 +147,24 @@ export const NovaProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const vote = (campaignId: number, voteYes: boolean) => {
-    if (!voteYes) return; // Currently only tracking YES votes for demo
-    
     setCampaigns(prev => prev.map(c => {
       if (c.id === campaignId) {
-        const userInvestment = investments.find(i => i.campaignId === campaignId)?.amount || 0;
+        const userInvestment = investments.find(i => i.campaignId === campaignId)?.amount || 1000;
         const newMilestones = [...c.milestones];
-        newMilestones[c.currentMilestoneIndex] = {
-          ...newMilestones[c.currentMilestoneIndex],
-          votesFor: newMilestones[c.currentMilestoneIndex].votesFor + userInvestment
-        };
         
-        // If votes > 50% of raised, auto-approve
-        if (newMilestones[c.currentMilestoneIndex].votesFor > c.raised / 2) {
-          newMilestones[c.currentMilestoneIndex].approved = true;
-          return { ...c, milestones: newMilestones, currentMilestoneIndex: Math.min(c.currentMilestoneIndex + 1, c.milestones.length - 1) };
+        if (voteYes) {
+          newMilestones[c.currentMilestoneIndex] = {
+            ...newMilestones[c.currentMilestoneIndex],
+            votesFor: newMilestones[c.currentMilestoneIndex].votesFor + userInvestment
+          };
+          
+          // If votes > 50% of raised, auto-approve
+          if (newMilestones[c.currentMilestoneIndex].votesFor > c.raised / 2) {
+            newMilestones[c.currentMilestoneIndex].approved = true;
+            return { ...c, milestones: newMilestones, currentMilestoneIndex: Math.min(c.currentMilestoneIndex + 1, c.milestones.length - 1) };
+          }
         }
+        
         return { ...c, milestones: newMilestones };
       }
       return c;

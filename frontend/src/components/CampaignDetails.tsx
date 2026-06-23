@@ -165,14 +165,20 @@ export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) =>
                     <motion.button 
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                       className="btn-primary" style={{ padding: '0.5rem 1.2rem' }} 
-                      onClick={() => vote(campaign.id, true)}
+                      onClick={() => {
+                        vote(campaign.id, true);
+                        toast.success('You voted YES on this milestone!');
+                      }}
                     >
                       Vote YES
                     </motion.button>
                     <motion.button 
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                       className="btn-danger" 
-                      onClick={() => vote(campaign.id, false)}
+                      onClick={() => {
+                        vote(campaign.id, false);
+                        toast.error('You voted NO on this milestone.');
+                      }}
                     >
                       Vote NO
                     </motion.button>
