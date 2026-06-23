@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from './App';
 
@@ -23,13 +23,13 @@ describe('NovaVest App', () => {
     expect(screen.getByText(/Stellar DEX Aggregator/i)).toBeInTheDocument();
   });
 
-  it('can click a campaign to view details', () => {
+  it('can click a campaign to view details', async () => {
     render(<App />);
     const campaignCard = screen.getByText(/Orbit Protocol/i);
     fireEvent.click(campaignCard);
     
-    expect(screen.getByText(/Back to Explore/i)).toBeInTheDocument();
-    expect(screen.getByText(/Invest & Get Gov Tokens/i)).toBeInTheDocument();
-    expect(screen.getByText(/Alpha Launch/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Back to Explore/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Invest & Mint Gov Tokens/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Alpha Launch/i)).toBeInTheDocument();
   });
 });
