@@ -93,6 +93,25 @@ export const CreatorDashboard: React.FC = () => {
             <li>Public Beta Launch (30% unlock)</li>
             <li>Mainnet & Token TGE (30% unlock)</li>
           </ul>
+          
+          <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <h4 style={{ marginBottom: '1rem', color: 'var(--accent-cyan)' }}>Governance Voting Requirement</h4>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+              To release treasury funds for each milestone, investors must vote via the DAO. A milestone is automatically approved and funds unlocked when <strong>&gt;50% of the invested capital</strong> votes YES.
+            </p>
+            
+            <div className="progress-container">
+              <div className="progress-stats" style={{ fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                <span>0%</span>
+                <span style={{ color: 'var(--accent-cyan)' }}>50% Required</span>
+                <span>100%</span>
+              </div>
+              <div className="progress-bar" style={{ height: '8px', position: 'relative' }}>
+                <div style={{ position: 'absolute', left: '50%', top: '-4px', bottom: '-4px', width: '2px', background: 'var(--accent-cyan)', zIndex: 2 }}></div>
+                <div style={{ width: '50%', height: '100%', background: 'rgba(0, 240, 255, 0.2)' }}></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <motion.button 
