@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Activity, ArrowLeft } from 'lucide-react';
+import { useNova, type Campaign } from '../context/NovaContext';
+
+interface DetailsProps {
+  campaign: Campaign;
+  onBack: () => void;
+}
+
+export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) => {
+  const { invest, vote } = useNova();
+  const [investAmount, setInvestAmount] = useState('');
+
+  const handleInvest = (e: React.FormEvent) => {
+    e.preventDefault();
+    const amount = parseFloat(investAmount);
+    if (!isNaN(amount) && amount > 0) {
+      invest(campaign.id, amount);
+      setInvestAmount('');
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="campaign-details"
+    >
+      <button className="btn-secondary" onClick={onBack} style={{ marginBottom: '2rem' }}>
+        <ArrowLeft size={18} /> Back to Explore
+      </button>
+      
+      <div className="glass-panel" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', background: 'linear-gradient(to right, #fff, #00f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          {campaign.name}
+        </h1>
+        <div className="campaign-startup" style={{ fontSize: '1.1rem' }}>Startup ID: {campaign.startup}</div>
+        
+        <div className="progress-container" style={{ marginTop: '2.5rem' }}>
+          <div className="progress-stats" style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>
+            <span>Raised: <strong style={{ color: '#00f0ff' }}>{campaign.raised.toLocaleString()} XLM</strong></span>
+            <span>Goal: {campaign.goal.toLocaleString()} XLM</span>
+          </div>
+          <div className="progress-bar" style={{ height: '12px' }}>
+            <motion.div 
+              className="progress-fill" 
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min((campaign.raised / campaign.goal) * 100, 100)}%` }}
+              transition={{ duration: 1 }}
+            />
+          </div>
+        </div>
+
+        <div style={{ marginTop: '2.5rem', padding: '1.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <h3 style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>Invest in this campaign</h3>
+          <form onSubmit={handleInvest} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <input 
+              type="number" 
+              value={investAmount}
+              onChange={(e) => setInvestAmount(e.target.value)}
+              placeholder="Amount in XLM" 
+              style={{ flex: '1 1 200px' }}
+              required
+            />
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit" 
+              className="btn-primary" 
+              style={{ flex: '0 0 auto' }}
+            >
+              Invest & Mint Gov Tokens
+            </motion.button>
+          </form>
+        </div>
+      </div>
+
+      <h2 style={{ marginBottom: '1.5rem' }}>Funding Milestones Roadmap</h2>
+      <div className="milestone-list" style={{ borderTop: 'none', paddingTop: 0 }}>
+        {campaign.milestones.map((m, idx) => (
+          <motion.div 
+            key={idx} 
+            className={`milestone-item ${idx === campaign.currentMilestoneIndex ? 'active' : ''}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + idx * 0.1 }}
+            style={{ padding: '1.5rem', marginBottom: '1.2rem', background: idx === campaign.currentMilestoneIndex ? 'rgba(0, 240, 255, 0.05)' : 'rgba(0,0,0,0.4)' }}
+          >
+            <div className="milestone-info">
+              <span className="milestone-desc" style={{ fontSize: '1.2rem' }}>{m.desc}</span>
+              <span className="milestone-meta" style={{ marginTop: '0.5rem' }}>
+                Unlocks <strong style={{ color: 'var(--text-main)' }}>{m.percentage}%</strong> of treasury funds
+              </span>
+              {idx === campaign.currentMilestoneIndex && !m.approved && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--accent-purple)' }}>
+                  Current Votes: {m.votesFor.toLocaleString()} / {(campaign.raised / 2).toLocaleString()} required
+                </div>
+              )}
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              {m.approved ? (
+                <span className="status-badge status-completed"><CheckCircle2 size={16} /> Approved</span>
+              ) : idx === campaign.currentMilestoneIndex ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
+                  <span className="status-badge status-active"><Activity size={16} /> Active Vote</span>
+                  <div className="vote-actions">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                      className="btn-primary" style={{ padding: '0.5rem 1.2rem' }} 
+                      onClick={() => vote(campaign.id, true)}
+                    >
+                      Vote YES
+                    </motion.button>
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                      className="btn-danger" 
+                      onClick={() => vote(campaign.id, false)}
+                    >
+                      Vote NO
+                    </motion.button>
+                  </div>
+                </div>
+              ) : (
+                <span className="status-badge status-pending">Pending</span>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
