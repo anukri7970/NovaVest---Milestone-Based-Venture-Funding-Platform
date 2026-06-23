@@ -1,86 +1,72 @@
-# NovaVest - Level 3 Orange Belt Submission 🚀
+# 🚀 NovaVest - Decentralized Milestone-Based Venture Funding
 
 NovaVest is an advanced, production-ready decentralized Venture Funding Platform built on Stellar (Soroban). It solves the web3 "rug pull" problem by locking startup funds in a Smart Contract Vault and releasing them only when investors vote to approve predefined milestones.
 
-## 🌟 Advanced Features
+## 🔗 Live Demo & Video Pitch
+- **Live Platform**: [nova-vest-milestone-based-venture-f.vercel.app](https://nova-vest-milestone-based-venture-f.vercel.app/)
+- **Demo Video**: [Watch the Demo on Google Drive](https://drive.google.com/file/d/1rJg1da4KQjCT_VO30-phupnAD05b-yll/view?usp=sharing)
 
-- **Complex Inter-Contract Communication**: Uses a central `Campaign Manager` that talks to a `Vault` contract (Escrow) and a `Governance Token` contract (Voting Power).
-- **Milestone-based Escrow**: Startups define milestones (e.g., Alpha Launch = 30% of funds).
-- **Decentralized Governance**: Investors receive Governance Tokens proportional to their investment and use them to vote YES/NO on milestone releases.
-- **Event Streaming**: Emits real-time Soroban events for investments, votes, and milestone releases.
-- **Premium UI**: Built with React, Vite, and Vanilla CSS featuring a stunning dark mode, glassmorphism, and neon accents. Fully mobile responsive.
-- **Production Ready**: Full test coverage (Vitest & Cargo) and a GitHub Actions CI/CD pipeline for automated testing and building.
+## 🌟 Key Features
 
----
-
-## 🔗 Links & Submissions
-
-- **Live Demo (Vercel/Netlify)**: `[Insert Live Demo Link Here]`
-- **Demo Video (YouTube/Loom)**: `[Insert Video Link Here]`
-
-### Contract Details (Stellar Testnet)
-- **Campaign Manager Contract**: `[Insert Campaign Manager Address Here]`
-- **Vault Contract**: `[Insert Vault Address Here]`
-- **Governance Token Contract**: `[Insert Gov Token Address Here]`
-- **Example Transaction Hash (Invest/Vote)**: `[Insert TX Hash Here]`
+1. **Milestone-based Escrow**: Startups define milestones (e.g., Alpha Launch = 30% of funds). Capital is locked and protected.
+2. **Decentralized Governance**: Investors act as a DAO, voting YES/NO on milestone releases. >50% approval automatically unlocks funds.
+3. **Real Wallet Integration**: Full Freighter wallet connection with live balance tracking and cryptographic transaction signing on the Stellar Testnet.
+4. **Premium UI**: Built with React, Vite, and Vanilla CSS featuring a stunning dark mode, glassmorphism, and neon accents. Fully mobile responsive.
 
 ---
 
-## 📸 Screenshots
+## 📸 Platform Gallery
 
-### 📱 Mobile Responsive UI
-> `[Insert Screenshot of Mobile View Here]`
+### 1. The Explore Dashboard
+Browse high-quality, verified Web3 startups seeking funding.
+![Explore Page](scrrenshots/Explore%20Page.png)
 
-### 🧪 Test Output (3+ Passing Tests)
-> `[Insert Screenshot of Vitest & Cargo Tests Here]`
+### 2. Campaign Details & Investment
+Deep dive into a startup's vision, view their funding progress, and invest XLM directly.
+![Campaign Details](scrrenshots/Campaign%20Details%20&%20Investment.png)
 
-### ⚙️ CI/CD Pipeline
-> `[Insert Screenshot of GitHub Actions Success Here]`
+### 3. Live Freighter Signature & Investment
+Real-time integration with the Freighter Wallet to securely sign Soroban transactions.
+![Live Freighter Signature](scrrenshots/Live%20Freighter%20Signature.png)
+
+### 4. Successful Investment Notification
+Live feedback and transaction tracking on the Stellar Expert Explorer.
+![Successfully Invested](scrrenshots/succesfully%20invested.png)
+
+### 5. Investor Portfolio
+Track all your active investments and live wallet balances in one place.
+![Portfolio](scrrenshots/Portfolio.png)
+
+### 6. Decentralized Governance
+Vote on active startup milestones to decide if they should receive their next tranche of funding.
+![Governance Dashboard](scrrenshots/Governance%20Dashboard.png)
+![Vote Notification](scrrenshots/funding_%20vote_notification.png)
+
+### 7. Propose New Campaign
+Submit your own Web3 startup for community funding, complete with automated 3-stage milestone tracking.
+![Propose Campaign](scrrenshots/propose.png)
 
 ---
 
-## 🛠️ Architecture
+## 🛠️ Tech Stack & Architecture
 
-1. **Contracts**:
-   - `campaign_manager`: Orchestrates the platform. Handles `create_campaign`, `invest`, `vote_milestone`, and `release_milestone`.
-   - `vault`: Holds the native XLM tokens. Only releases funds when authorized by the `campaign_manager`.
-   - `governance_token`: Minted to investors when they fund a campaign. Used to track voting power.
-2. **Frontend**:
-   - Built with React + TypeScript.
-   - Uses `@stellar/freighter-api` for wallet connection and transaction signing.
-   - Service layer `soroban.ts` for contract RPC calls.
-
----
+- **Frontend**: React, Vite, TypeScript, Vanilla CSS (Glassmorphism UI)
+- **Blockchain**: Stellar Network, Soroban Smart Contracts
+- **Wallet Integration**: `@stellar/freighter-api`, `@stellar/stellar-sdk`
+- **CI/CD**: GitHub Actions (Automated testing & deployments)
+- **Deployment**: Vercel
 
 ## 🚀 Setup & Deployment
 
-### 1. Smart Contracts
-To build and deploy the contracts:
-```bash
-# Build WASM
-cargo build --target wasm32-unknown-unknown --release
-
-# Run Tests
-cargo test
-
-# Deploy to Testnet (Example for Campaign Manager)
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/campaign_manager.wasm \
-  --source-account <your-account> \
-  --network testnet
-```
-
-### 2. Frontend
+### Run Locally
 ```bash
 cd frontend
 npm install
-
-# Run Tests
-npm run test
-
-# Start Development Server
 npm run dev
 ```
 
-### 3. CI/CD
-This repository includes a `.github/workflows/main.yml` file that automatically lints, tests, and builds the contracts and frontend on every push to `main`.
+### Run Tests
+```bash
+cd frontend
+npm run test
+```
