@@ -15,7 +15,7 @@ import './index.css';
 type Tab = 'explore' | 'portfolio' | 'create' | 'governance';
 
 function AppContent() {
-  const { address, balance, connect, disconnect, error } = useFreighter();
+  const { address, balance, connect, disconnect, error, deductBalance } = useFreighter();
   const [activeTab, setActiveTab] = useState<Tab>('explore');
   const { campaigns, investments } = useNova();
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
@@ -57,6 +57,7 @@ function AppContent() {
             key="details" 
             campaign={activeCampaign} 
             onBack={handleBackToExplore} 
+            onInvestSuccess={(amount) => deductBalance(amount)}
           />
         ) : (
           <motion.div

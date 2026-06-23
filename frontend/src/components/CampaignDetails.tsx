@@ -8,9 +8,10 @@ import toast from 'react-hot-toast';
 interface DetailsProps {
   campaign: Campaign;
   onBack: () => void;
+  onInvestSuccess?: (amount: number) => void;
 }
 
-export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) => {
+export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack, onInvestSuccess }) => {
   const { invest, vote } = useNova();
   const [investAmount, setInvestAmount] = useState('');
   const [isInvesting, setIsInvesting] = useState(false);
@@ -30,6 +31,7 @@ export const CampaignDetails: React.FC<DetailsProps> = ({ campaign, onBack }) =>
       
       // Update global context so UI changes
       invest(campaign.id, amount);
+      if (onInvestSuccess) onInvestSuccess(amount);
       setInvestAmount('');
       
       toast.success(

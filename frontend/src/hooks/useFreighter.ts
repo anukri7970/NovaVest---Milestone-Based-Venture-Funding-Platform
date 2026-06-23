@@ -45,5 +45,13 @@ export const useFreighter = () => {
     setBalance(null);
   }, []);
 
-  return { address, balance, connect, disconnect, error };
+  const deductBalance = useCallback((amount: number) => {
+    setBalance(prev => {
+      if (!prev) return prev;
+      const newBal = parseFloat(prev) - amount;
+      return newBal > 0 ? newBal.toFixed(2) : "0.00";
+    });
+  }, []);
+
+  return { address, balance, connect, disconnect, error, deductBalance };
 };
