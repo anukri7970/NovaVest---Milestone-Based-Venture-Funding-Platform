@@ -19,32 +19,35 @@ NovaVest is an advanced, production-ready decentralized Venture Funding Platform
 
 ### 1. The Explore Dashboard
 Browse high-quality, verified Web3 startups seeking funding.
-![Explore Page](scrrenshots/Explore%20Page.png)
+<img src="scrrenshots/explore_page.png" width="100%" alt="Explore Page" />
 
 ### 2. Campaign Details & Investment
 Deep dive into a startup's vision, view their funding progress, and invest XLM directly.
-![Campaign Details](scrrenshots/Campaign%20Details%20&%20Investment.png)
+<img src="scrrenshots/campaign_details.png" width="100%" alt="Campaign Details" />
 
 ### 3. Live Freighter Signature & Investment
 Real-time integration with the Freighter Wallet to securely sign Soroban transactions.
-![Live Freighter Signature](scrrenshots/Live%20Freighter%20Signature.png)
+<img src="scrrenshots/freighter_signature.png" width="100%" alt="Freighter Signature" />
 
 ### 4. Successful Investment Notification
 Live feedback and transaction tracking on the Stellar Expert Explorer.
-![Successfully Invested](scrrenshots/succesfully%20invested.png)
+<img src="scrrenshots/invested.png" width="100%" alt="Invested" />
 
 ### 5. Investor Portfolio
 Track all your active investments and live wallet balances in one place.
-![Portfolio](scrrenshots/Portfolio.png)
+<img src="scrrenshots/portfolio.png" width="100%" alt="Portfolio" />
+<br />
+<img src="scrrenshots/wallet_balance.png" width="100%" alt="Wallet Balance" />
 
 ### 6. Decentralized Governance
 Vote on active startup milestones to decide if they should receive their next tranche of funding.
-![Governance Dashboard](scrrenshots/Governance%20Dashboard.png)
-![Vote Notification](scrrenshots/funding_%20vote_notification.png)
+<img src="scrrenshots/governance_dashboard.png" width="100%" alt="Governance Dashboard" />
+<br />
+<img src="scrrenshots/vote_notification.png" width="100%" alt="Vote Notification" />
 
 ### 7. Propose New Campaign
 Submit your own Web3 startup for community funding, complete with automated 3-stage milestone tracking.
-![Propose Campaign](scrrenshots/propose.png)
+<img src="scrrenshots/propose.png" width="100%" alt="Propose Campaign" />
 
 ---
 
