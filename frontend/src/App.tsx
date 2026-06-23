@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { NovaProvider, type Campaign } from './context/NovaContext';
+import { NovaProvider, useNova, type Campaign } from './context/NovaContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ExploreCampaigns } from './components/ExploreCampaigns';
@@ -17,14 +17,19 @@ type Tab = 'explore' | 'portfolio' | 'create' | 'governance';
 function AppContent() {
   const { address, connect, error } = useFreighter();
   const [activeTab, setActiveTab] = useState<Tab>('explore');
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const { campaigns } = useNova();
+  const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
+
+  const activeCampaign = selectedCampaignId 
+    ? campaigns.find(c => c.id === selectedCampaignId) || null 
+    : null;
 
   const handleSelectCampaign = (campaign: Campaign) => {
-    setSelectedCampaign(campaign);
+    setSelectedCampaignId(campaign.id);
   };
 
   const handleBackToExplore = () => {
-    setSelectedCampaign(null);
+    setSelectedCampaignId(null);
   };
 
   return (
@@ -47,10 +52,10 @@ function AppContent() {
       )}
 
       <AnimatePresence mode="wait">
-        {selectedCampaign ? (
+        {activeCampaign ? (
           <CampaignDetails 
             key="details" 
-            campaign={selectedCampaign} 
+            campaign={activeCampaign} 
             onBack={handleBackToExplore} 
           />
         ) : (
